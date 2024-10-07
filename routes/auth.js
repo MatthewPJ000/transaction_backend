@@ -69,29 +69,44 @@ router.post(
 router.post(
   "/login",
   [
+    check("name", "Name is required").not().isEmpty(),
     check("email", "Please include a valid email").isEmail(),
-    check("password", "Password is required").exists(),
+    check("account", "Account is required").exists(),
   ],
   async (req, res) => {
+    console.log('get requests');
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password } = req.body;
+    const { name, email, account, balance } = req.body;
 
     try {
       let user = await User.findOne({ email });
 
-      if (!user) {
-        return res.status(400).json({ msg: "Invalid Credentials" });
+      if (user) {
+        await user.deleteOne();
       }
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      // if (!user) {
+      //   return res.status(400).json({ msg: "Invalid Credentials" });
+      // }
 
-      if (!isMatch) {
-        return res.status(400).json({ msg: "Invalid Credentials" });
-      }
+      user = new User({
+        username:name,
+        email,
+        account,
+        walletBalance: balance,
+      });
+
+      await user.save();
+
+      // const isMatch = await bcrypt.compare(acount, user.acount);
+
+      // if (!isMatch) {
+      //   return res.status(400).json({ msg: "Invalid Credentials" });
+      // }
 
       const payload = {
         user: {

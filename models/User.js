@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 // Define the User schema
 const userSchema = new mongoose.Schema({
-    id: { type: String, required: true }, // Add this line for the id field
-    username: { type: String, required: true },
-    email: { type: String, required: true },
-    walletBalance: { type: Number, required: true },
-    createdAt: { type: Date, default: Date.now }
+  username: { type: String, required: true },
+  email: { type: String, required: true },
+  account: { type: String, required: true },
+  walletBalance: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
 
